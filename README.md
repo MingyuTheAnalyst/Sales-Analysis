@@ -44,7 +44,9 @@ In the initial data preparation phase, we performed the following tasks:
 3. Trasforming and extract the data.
 
 - DIM_Calendar table
-   
+  
+  ![2-Calendar](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/0ffdf455-6e95-45bd-8169-69e390ffb0d4)
+  
   ```sql
   --Cleaned DIM_DateTable --
   SELECT 
@@ -72,11 +74,11 @@ In the initial data preparation phase, we performed the following tasks:
     [AdventureWorksDW2022].[dbo].[DimDate]
     WHERE CalendarYear >= 2022
   ```
-  
-![2-Calendar](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/0ffdf455-6e95-45bd-8169-69e390ffb0d4)
 
 - DIM_Customer table
-
+  
+  ![3-Customer](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/eecc8a46-6512-4d2b-b602-0df46e19ca29)
+  
   ```sql
   -- Cleaned DIM_Customers Table --
   SELECT 
@@ -123,9 +125,9 @@ In the initial data preparation phase, we performed the following tasks:
     [Customer Key] ASC -- Ordered List by Customer Key
   ```
 
-![3-Customer](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/eecc8a46-6512-4d2b-b602-0df46e19ca29)
-
 - DIM_Product table
+
+  ![4-Products](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/648f5219-2d30-4ff2-aa5e-0a8c80a1af84)
 
   ```sql
   -- Cleaned DIM Product Table --
@@ -176,10 +178,10 @@ In the initial data preparation phase, we performed the following tasks:
     LEFT JOIN dbo.DimProductCategory AS pc ON ps.ProductCategoryKey = pc.ProductCategoryKey
   ```
 
-![4-Products](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/648f5219-2d30-4ff2-aa5e-0a8c80a1af84)
-
 - FACT_InternetSales table
 
+  ![5-internetSales](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/31844aa0-0521-41d0-9699-85fc631293a8)
+  
 ```sql
 SELECT TOP (1000) [ProductKey]
       ,[OrderDateKey]
@@ -213,7 +215,7 @@ SELECT TOP (1000) [ProductKey]
   ORDER BY OrderDateKey ASC
 ```
 
-![5-internetSales](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/31844aa0-0521-41d0-9699-85fc631293a8)
+
 
 
 
@@ -221,15 +223,15 @@ SELECT TOP (1000) [ProductKey]
 
  - Import all of extracted data(.csv) to Power BI and make a relationship between keys.
 
- <img width="600" alt="Data Modeling" src="https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/b21dcca2-37d2-4387-93b3-bdd3e0d0bb6d">
+	<img width="600" alt="Data Modeling" src="https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/b21dcca2-37d2-4387-93b3-bdd3e0d0bb6d">
 
 
  - Creating Dashboard
 
-![SalesOverview](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/df229e1b-5a30-4dcf-982a-b0aa1398ecd3)
-
-![CustomerDetails](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/e0e4fae2-5dc1-48a0-99f9-96c00791941f)
-
-![ProductDetails](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/8f48904b-556e-4cbf-9b40-b086d35c8861)
+	![SalesOverview](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/df229e1b-5a30-4dcf-982a-b0aa1398ecd3)
+	
+	![CustomerDetails](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/e0e4fae2-5dc1-48a0-99f9-96c00791941f)
+	
+	![ProductDetails](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/8f48904b-556e-4cbf-9b40-b086d35c8861)
 
 
