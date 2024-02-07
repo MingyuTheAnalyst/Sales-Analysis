@@ -234,8 +234,9 @@ SELECT TOP (1000) [ProductKey]
 
 	![SalesOverview](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/df229e1b-5a30-4dcf-982a-b0aa1398ecd3)
 	
-	![CustomerDetails](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/e0e4fae2-5dc1-48a0-99f9-96c00791941f)
+	![customerdetail1](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/a6bd535b-fb7c-4ae2-9eae-5b3feffb9f50)
 	
-	![ProductDetails](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/8f48904b-556e-4cbf-9b40-b086d35c8861)
+ 	![productdetail1](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/b192cc34-59a2-4614-837d-07a8cc7cfbfb)
+
 
 
