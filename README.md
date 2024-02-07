@@ -223,6 +223,8 @@ SELECT TOP (1000) [ProductKey]
 
 ### Data Visualization
 
+ - [Click to download Dashboard Power BI file](https://github.com/MingyuTheAnalyst/Sales-Management-Project/raw/main/SalesDashboard.pbix)
+   
  - Import all of extracted data(.csv) to Power BI and make a relationship between keys.
 
 	<img width="600" alt="Data Modeling" src="https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/b21dcca2-37d2-4387-93b3-bdd3e0d0bb6d">
