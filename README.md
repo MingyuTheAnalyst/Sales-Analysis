@@ -6,12 +6,12 @@
  - [Data Sources](#data-sources)
  - [Tools](#tools)
  - [Requirement](#requirement)
- - [Data Cleaning](#data-cleaning)
+ - [Data Cleaning & Transformation](#data-cleaning-and-transformation)
  - [Data Visualization](#data-visualization)
 
 ### Project Overview
 
-- According to the requirements set by the virtual manager Steven, which involved enhancing internet sales reporting by transitioning from static reports to dynamic, visual dashboards, I carried out a project to clean Sales Data with SQL and create data modeling and a dashboard with Power BI.
+- According to the requirements set by the virtual manager Steven, which involved enhancing internet sales reporting from 2022 to 2024 by transitioning from static reports to dynamic, visual dashboards, I carried out a project to clean Sales Data with SQL and create data modeling and a dashboard with Power BI.
 
 ### Data Sources
 
@@ -20,7 +20,7 @@
 
 ### Tools
 
-- SQL Server - Data Cleaning
+- SQL Server - Data Cleaning, Transformation
 - Power BI - Data Modeling, Creating Dashboard
 
 
@@ -36,56 +36,200 @@ Comparison Against Budget:
  - Steven has provided a spreadsheet with the budget details.
 
 
-### Data Cleaning
+### Data Cleaning and Transformation
 
 In the initial data preparation phase, we performed the following tasks:
-1. Data loading and inspection.
-2. Correct the wrong values.
-3. Data cleaning and formatting.
-4. Create Data modelling
+1. Restore the downloaded database to SQL Server.
+2. Data loading and inspection.
+3. Trasforming and extract the data.
+
+- DIM_Calendar table
    
+  ```sql
+  --Cleaned DIM_DateTable --
+  SELECT 
+    [DateKey], 
+    [FullDateAlternateKey] AS Date, 
+    --,[DayNumberOfWeek]
+    [EnglishDayNameOfWeek] AS Day, 
+    --,[SpanishDayNameOfWeek]
+    --,[FrenchDayNameOfWeek]
+    --,[DayNumberOfMonth]
+    --,[DayNumberOfYear]
+    [WeekNumberOfYear] AS WeekNo, 
+    [EnglishMonthName] AS Month, 
+    LEFT([EnglishMonthName], 3) AS MonthShort, 
+    --,[SpanishMonthName]
+    --,[FrenchMonthName]
+    [MonthNumberOfYear] AS MonthNo, 
+    [CalendarQuarter] AS Quarter, 
+    [CalendarYear] As Year 
+    --,[CalendarSemester]
+    --,[FiscalQuarter]
+    --,[FiscalYear]
+    --,[FiscalSemester]
+  FROM 
+    [AdventureWorksDW2022].[dbo].[DimDate]
+    WHERE CalendarYear >= 2022
+  ```
+  
+![2-Calendar](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/0ffdf455-6e95-45bd-8169-69e390ffb0d4)
 
+- DIM_Customer table
 
+  ```sql
+  -- Cleaned DIM_Customers Table --
+  SELECT 
+    c.CustomerKey AS [Customer Key] 
+    --,[GeographyKey]
+    --,[CustomerAlternateKey]
+    --,[Title]
+    , 
+    c.FirstName AS [First Name] 
+    --,[MiddleName]
+    , 
+    c.LastName AS [Last Name], 
+    c.FirstName + ' ' + [LastName] AS [Full Name] 
+    --  ,[NameStyle]
+    --  ,[BirthDate]
+    --  ,[MaritalStatus]
+    --  ,[Suffix]
+    , 
+    CASE c.Gender WHEN 'M' THEN 'Male' WHEN 'F' THEN 'Female' ELSE 'Other' END AS [Gender] 
+    --  ,[EmailAddress]
+    --  ,[YearlyIncome]
+    --  ,[TotalChildren]
+    --  ,[NumberChildrenAtHome]
+    --  ,[EnglishEducation]
+    --  ,[SpanishEducation]
+    --  ,[FrenchEducation]
+    --  ,[EnglishOccupation]
+    --  ,[SpanishOccupation]
+    --  ,[FrenchOccupation]
+    --  ,[HouseOwnerFlag]
+    --  ,[NumberCarsOwned]
+    --  ,[AddressLine1]
+    --  ,[AddressLine2]
+    --  ,[Phone]
+    , 
+    c.DateFirstPurchase AS [DateFirstPurchase] 
+    --  ,[CommuteDistance]
+    , 
+    g.City AS [Customer City] -- Joined in Customer City from DimGeography Table
+  FROM 
+    [AdventureWorksDW2022].[dbo].[DimCustomer] AS c 
+    LEFT JOIN DimGeography AS g ON g.GeographyKey = c.GeographyKey 
+  ORDER BY 
+    [Customer Key] ASC -- Ordered List by Customer Key
+  ```
 
+![3-Customer](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/eecc8a46-6512-4d2b-b602-0df46e19ca29)
+
+- DIM_Product table
+
+  ```sql
+  -- Cleaned DIM Product Table --
+  SELECT 
+    p.[ProductKey], 
+    p.[ProductAlternateKey] AS ProductItemCode, 
+    --      ,[ProductSubcategoryKey]
+    --      ,[WeightUnitMeasureCode]
+    --      ,[SizeUnitMeasureCode]
+    p.[EnglishProductName] AS [Product Name], 
+    ps.EnglishProductSubcategoryName AS [Sub Category], 
+    -- Joined in from Sub Category Table
+    pc.EnglishProductCategoryName AS [Product Category], 
+    -- Joined in from Category Table
+    --      ,[SpanishProductName]
+    --      ,[FrenchProductName]
+    --      ,[StandardCost]
+    --      ,[FinishedGoodsFlag]
+    p.[Color] AS [Product Color], 
+    --      ,[SafetyStockLevel]
+    --      ,[ReorderPoint]
+    --      ,[ListPrice]
+    p.[Size] AS [Product Size], 
+    --      ,[SizeRange]
+    --      ,[Weight]
+    --      ,[DaysToManufacture]
+    p.[ProductLine] AS [Product Line], 
+    --      ,[DealerPrice]
+    --      ,[Class]
+    --      ,[Style]
+    p.[ModelName] AS [Product Model Name], 
+    --      ,[LargePhoto]
+    p.[EnglishDescription] AS [Product Description], 
+    --      ,[FrenchDescription]
+    --      ,[ChineseDescription]
+    --      ,[ArabicDescription]
+    --      ,[HebrewDescription]
+    --      ,[ThaiDescription]
+    --      ,[GermanDescription]
+    --      ,[JapaneseDescription]
+    --      ,[TurkishDescription]
+    --      ,[StartDate]
+    --      ,[EndDate]
+    ISNULL (p.Status, 'Outdated') AS [Product Status] 
+  FROM 
+    [AdventureWorksDW2022].[dbo].[DimProduct] as p 
+    LEFT JOIN dbo.DimProductSubcategory AS ps ON ps.ProductSubcategoryKey = p.ProductSubcategoryKey 
+    LEFT JOIN dbo.DimProductCategory AS pc ON ps.ProductCategoryKey = pc.ProductCategoryKey
+  ```
+
+![4-Products](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/648f5219-2d30-4ff2-aa5e-0a8c80a1af84)
+
+- FACT_InternetSales table
+
+```sql
+SELECT TOP (1000) [ProductKey]
+      ,[OrderDateKey]
+      ,[DueDateKey]
+      ,[ShipDateKey]
+      ,[CustomerKey]
+--      ,[PromotionKey]
+--      ,[CurrencyKey]
+--      ,[SalesTerritoryKey]
+      ,[SalesOrderNumber]
+--      ,[SalesOrderLineNumber]
+--      ,[RevisionNumber]
+--      ,[OrderQuantity]
+--      ,[UnitPrice]
+--      ,[ExtendedAmount]
+--      ,[UnitPriceDiscountPct]
+--      ,[DiscountAmount]
+--      ,[ProductStandardCost]
+--      ,[TotalProductCost]
+      ,[SalesAmount]
+--      ,[TaxAmt]
+--      ,[Freight]
+--      ,[CarrierTrackingNumber]
+--      ,[CustomerPONumber]
+--      ,[OrderDate]
+--      ,[DueDate]
+--      ,[ShipDate]
+  FROM [AdventureWorksDW2022].[dbo].[FactInternetSales]
+  WHERE
+	LEFT (OrderDateKey, 4) >= YEAR(GETDATE()) - 2   -- Ensure we always only bring two years of date from extraction.
+  ORDER BY OrderDateKey ASC
+```
+
+![5-internetSales](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/31844aa0-0521-41d0-9699-85fc631293a8)
 
 
 
 ### Data Visualization
-[Go to Download Page- Dashboard](https://github.com/MingyuTheAnalyst/Road-Accident-Analysis/blob/main/Dashboard_Road%20Accident.pbix)
 
-![Cap 2024-01-29 16-47-09-971](https://github.com/MingyuTheAnalyst/Road-Accident-Analysis/assets/88122148/a621e1bf-056b-441b-860e-32128959fce3)
+ - Import all of extracted data(.csv) to Power BI and make a relationship between keys.
 
-- Primary KPI - Total Casualties and Total Accident values for Current Year and YoY growth
+ <img width="600" alt="Data Modeling" src="https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/b21dcca2-37d2-4387-93b3-bdd3e0d0bb6d">
 
-  <img width="150" alt="Screenshot 2024-01-31 at 10 33 08 PM" src="https://github.com/MingyuTheAnalyst/Road-Accident-Analysis/assets/88122148/e498d9eb-1e97-4e87-8bad-053bcf5a459d">
-  
-  <img width="150" alt="Screenshot 2024-01-31 at 10 34 29 PM" src="https://github.com/MingyuTheAnalyst/Road-Accident-Analysis/assets/88122148/25061004-f71a-4e56-97ef-9d3c45337a30">
 
-- Primary KPI's - Total Casualties by Accident by Accident Severity for Current Year and YoY growth
-  
-  <img width="150" alt="Screenshot 2024-01-31 at 10 35 43 PM" src="https://github.com/MingyuTheAnalyst/Road-Accident-Analysis/assets/88122148/fc0586e3-52e7-4062-833c-4b0c03d3dd03">
-  
-   <img width="150" alt="Screenshot 2024-01-31 at 10 36 03 PM" src="https://github.com/MingyuTheAnalyst/Road-Accident-Analysis/assets/88122148/14d5fd32-d92b-481d-ab70-edd31a15a98c">
-   
-   <img width="150" alt="Screenshot 2024-01-31 at 10 36 13 PM" src="https://github.com/MingyuTheAnalyst/Road-Accident-Analysis/assets/88122148/edf6735a-8ac2-44a4-b993-f4bf78f0c0ae">
+ - Creating Dashboard
 
-- Secondary KPI's - Total Casualties with respect to vehicle type for Current Year
+![SalesOverview](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/df229e1b-5a30-4dcf-982a-b0aa1398ecd3)
 
-  <img width="150" alt="Screenshot 2024-01-31 at 10 38 24 PM" src="https://github.com/MingyuTheAnalyst/Road-Accident-Analysis/assets/88122148/6bea759f-a8a7-4206-a9d8-46cba9c739d8">
+![CustomerDetails](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/e0e4fae2-5dc1-48a0-99f9-96c00791941f)
 
-- Monthly trend showing comparison of casualties for Current Year and Previous Year
+![ProductDetails](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/8f48904b-556e-4cbf-9b40-b086d35c8861)
 
-  <img width="500" alt="Screenshot 2024-01-31 at 10 38 45 PM" src="https://github.com/MingyuTheAnalyst/Road-Accident-Analysis/assets/88122148/cf777c7b-b198-43ca-95c6-af638b1b57d4">
 
-- Casualties by Road Type for Current Year
-
-   <img width="500" alt="Screenshot 2024-01-31 at 10 39 10 PM" src="https://github.com/MingyuTheAnalyst/Road-Accident-Analysis/assets/88122148/7f77e10d-8c18-4b4a-a7ef-c7640d64b2e0">
-
-- Current Year Casualties by Area/Location & by Day/Night
-
-  <img width="200" alt="Screenshot 2024-01-31 at 10 40 27 PM" src="https://github.com/MingyuTheAnalyst/Road-Accident-Analysis/assets/88122148/ade1d984-166e-476c-895f-85f73b513744">
-
-- Total Casualties and Total Accidents by Location
-
-  <img width="200" alt="Screenshot 2024-01-31 at 10 40 48 PM" src="https://github.com/MingyuTheAnalyst/Road-Accident-Analysis/assets/88122148/2dc83b5b-4eda-4ded-8ad3-6c6a9d39e775">
-   <img width="200" alt="Screenshot 2024-01-31 at 10 40 58 PM" src="https://github.com/MingyuTheAnalyst/Road-Accident-Analysis/assets/88122148/981a31e0-66f8-406e-9082-b11b736c4212">
