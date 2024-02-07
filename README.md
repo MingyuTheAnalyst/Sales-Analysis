@@ -1,4 +1,5 @@
 # Sales Management Project
+![salesproject](https://github.com/MingyuTheAnalyst/Sales-Management-Project/assets/88122148/41ae37f4-d0d3-4e8a-9b04-6e9f2b6c0bfa)
 
 ## Table of Contents
 
